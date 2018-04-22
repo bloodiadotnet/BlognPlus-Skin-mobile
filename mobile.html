@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>{SITETITLE}</title>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <meta http-equiv="content-style-type" content="text/css" />
+  <meta http-equiv="content-script-type" content="text/javascript" />
+  <meta name="title" content="{SITENAME}" />
+  <meta name="copyright" content="{SITENAME}" />
+  <meta name="author" content="{SITENAME}" />
+  <meta name="description" content="{SITEDESC}" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <link type="application/rss+xml" rel="alternate" href="{HOMELINK}?mode=rss" title="RSS 1.0" />
+  <!-- 配布先からローカル環境にダウンロード後、パスを変更してお使いください -->
+  <link type="text/css" rel="stylesheet" href="//code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.css" />
+  <!-- 配布先からローカル環境にダウンロード後、パスを変更してお使いください -->
+  <link type="text/css" rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <!-- 配布先からローカル環境にダウンロード後、パスを変更してお使いください -->
+  <link type="text/css" rel="stylesheet" href="//cdn.jsdelivr.net/jquery.jssocials/1.4.0/jssocials.css" />
+  <!-- 配布先からローカル環境にダウンロード後、パスを変更してお使いください -->
+  <link type="text/css" rel="stylesheet" href="//cdn.jsdelivr.net/jquery.jssocials/1.4.0/jssocials-theme-classic.css" />
+  <!-- 配布先からローカル環境にダウンロード後、パスを変更してお使いください -->
+  <script type="text/javascript" src="//code.jquery.com/jquery-1.8.3.min.js" charset="utf-8"></script>
+  <script type="text/javascript">
+  <!--
+
+    // jQueryMobile初期化イベント
+    $(document).bind("mobileinit", function(){
+      $.mobile.linkBindingEnabled = false;
+    });
+
+    // 読み込み開始時のイベント
+    $(document).ready(function($){
+      // レスポンシブ設定対応
+      $("#page iframe").each(function(){ // iframeレスポンシブ対応
+        $(this).wrap('<div class="iframe-wrap"></div>');
+      });
+      $("#page embed").each(function(){ // embedレスポンシブ対応
+        $(this).wrap('<div class="embed-wrap"></div>');
+      });
+      $("#page img").each(function(){ // img（リンクなし）レスポンシブ対応
+        if($(this).attr("src").match(/\.(jpg|gif|png)$/i) && ! $(this).attr("src").match(/\/ico\/(.*)\.(jpg|gif|png)$/i)){
+          var imgurl  = $(this).attr("src");
+          var convimg = '<img src="' + imgurl + '" class="img-wrap" />';
+          $(this).replaceWith(convimg);
+        }
+      });
+      $("#page a").each(function(){ // img（リンクあり）レスポンシブ対応
+        if($(this).html() == '[PIC]' && $(this).html() != 'undefined' && $(this).attr("href").match(/\.(jpg|gif|png)$/i)){
+          var imgurl  = $(this).attr("href").split("im.php?");
+          imgurl = decodeURIComponent(imgurl[1]);
+          var convimg = '<img src="' + imgurl + '" class="img-wrap" />';
+          $(this).replaceWith(convimg);
+        }
+      });
+      $("#page .navbar li").removeClass("navhome");
+      $("#page .navbar li").each(function(){ // ナビゲーションバーレスポンシブ対応
+        if($(this).html() == ''){
+          $(this).remove();
+        }
+      });
+      // ボタンアイコン設定対応
+      $("#page .more a").attr({ // もっとみるボタンアイコン設定
+        'data-role':'button'
+      });
+      $("#page .navbar li.navback a").attr({ // 前の記事ボタンアイコン設定
+        'data-icon':'arrow-l'
+      });
+      $("#page .navbar li.navnext a").attr({ // 次の記事ボタンアイコン設定
+        'data-icon':'arrow-r'
+      });
+      // コメント設定対応
+      $("#page span#comments").each(function(){ // コメント文字列置換対応
+        var commnets = $(this).html().replace("C", "コメント");
+        $(this).html(commnets);
+      });
+      // トラックバック設定対応
+      $("#tburl").click(function(){ // マウスクリックイベント時
+        $(this).focus();
+      });
+      $("#tburl").focus(function(){ // マウスフォーカスイベント時
+        $(this).select();
+      });
+      $("#page span#trackback").each(function(){ // トラックバック文字列置換対応
+        var trackback = $(this).html().replace("T", "トラックバック");
+        $(this).html(trackback);
+      });
+    });
+
+    // コメントフォームの入力チェック
+    function comment_check(){
+      var name     = $.trim($("#c_name").val());
+      var email    = $.trim($("#c_email").val());
+      var url      = $.trim($("#c_url").val());
+      var comments = $.trim($("#c_mes").val());
+      if(name == "" || comments == ""){ // 「名前」、「本文」入力チェック
+        alert('必須項目が未入力です'); // 入力漏れがあれば警告ダイアログを表示
+        return false;
+      }
+      if(email != "" && ! email.match(/^[A-Za-z0-9]+[\w-]+@[\w\.-]+\.\w{2,}$/)){ // 「メールアドレス」の形式チェック
+        alert('メールアドレスが不正です'); // 「メールアドレス」が不正ならば警告ダイアログを表示
+        return false;
+      }
+      if(url != "" && ! url.match(/(http|https):\/\/.+/)){ // 「URL」の形式チェッ>ク
+        alert('URLが不正です'); // 「URL」が不正ならば警告ダイアログを表示
+        return false;
+      }
+      return true;
+    }
+
+    // 指定した記事が存在しない場合に表示
+    function article_not_exist(name,title){
+      var data = '指定した記事は存在しません';
+      if(title == data + '::' + name){
+        data = '指定した記事は存在しません';
+        $('#article_not_exist').html(data);
+      }
+    }
+
+    // ソーシャルプラグインのインターフェースコール
+    function share(){
+      var text = document.title.replace(location.hash,"");
+      var url = location.href.replace(location.hash,"");
+      var data = location.href.split("?");
+      var share = '';
+      data[1] = data[1] + "";
+      if(!data[1].search('e=')){
+        share = share + '      <h3>この記事を共有する</h3>';
+        share = share + '      <div id="share"></div>';
+      }else{
+        share = '';
+      }
+      $('#share').html(share);
+      if(!data[1].search('e=')){
+        $(function(){
+          $("#share").jsSocials({
+            url: url,
+            text: text,
+            shares: ["twitter", "facebook", "googleplus", "linkedin", "pinterest"]
+          });
+        });
+      }
+    }
+
+  // -->
+  </script>
+  <!-- 配布先からローカル環境にダウンロード後、パスを変更してお使いください -->
+  <script type="text/javascript" src="//code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.js" charset="utf-8"></script>
+  <!-- 配布先からローカル環境にダウンロード後、パスを変更してお使いください -->
+  <script type="text/javascript" src="//cdn.jsdelivr.net/jquery.jssocials/1.4.0/jssocials.min.js" charset="utf-8"></script>
+  <style type="text/css">
+  <!--
+    #page .iframe-wrap, #page .embed-wrap {
+      position: relative;
+      width: 100%;
+      padding-top: 56.25%;
+    }
+    #page .iframe-wrap iframe, #page .embed-wrap embed {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+    #page .img-wrap {
+      border: 5px solid #fff;
+      background-color: #fff;
+      box-shadow: 0 0 5px 2px rgba(0,0,0,.4);
+      display: inline-block;
+      margin: -5px;
+      width: 100%;
+      max-height: auto;
+    }
+    #page .navhome {
+      width: 100%;
+    }
+    #page .containing-element .ui-slider-switch {
+      width: 9em;
+    }
+    #page table {
+      width: 100%;
+    }
+    .ui-header .ui-title {
+      margin-left: 15%;
+      margin-right: 15%;
+    }
+    .ui-navbar .ui-block-c .ui-btn {
+      margin: 0 -1px !important;
+    }
+    .ui-navbar li .ui-btn {
+      margin: 0 !important;
+    }
+    .ui-content .ui-li-desc {
+      white-space: normal;
+    }
+  -->
+  </style>
+</head>
+<body>
+
+<!-- page -->
+<div data-role="page" id="page" data-title="{SITETITLE}">
+
+  <!-- header -->
+  <div data-role="header" data-theme="b">
+    <h1>{SITETITLE}</h1>
+
+    <!-- navbar -->
+    <div data-role="navbar" data-iconpos="bottom" role="navigation" class="navbar">
+      <ul>
+        <li class="navback">{BACKPAGE}前の記事{/BACKPAGE}</li>
+        <li class="navhome"><a href="{HOMELINK}" data-icon="home">ホーム</a></li>
+        <li class="navnext">{NEXTPAGE}次の記事{/NEXTPAGE}</li>
+      </ul>
+    </div>
+    <!-- /navbar -->
+
+    <!-- search -->
+    <form action="./" method="get">
+      <label for="search-basic" class="ui-hidden-accessible">記事検索...</label>
+      <input type="search" name="s" id="search-basic" placeholder="記事検索..." />
+    </form>
+    <!-- /search -->
+
+  </div>
+  <!-- /header -->
+
+  <!-- content -->
+  <div data-role="content" data-theme="b">
+
+    <!-- log -->
+    {LOG}
+      {LOGLOOP}
+
+        <!-- article -->
+        <p>{LOGTITLE}</p>
+        <p>{LOGYMD}Y/m/d{/LOGYMD} {LOGHMS}H:i{/LOGHMS}</p>
+        <p>{LOGBODY}</p>
+        <p class="more">{MOREMARK}もっと見る{/MOREMARK}</p>
+        <p>{LOGMORE}</p>
+        <p>
+          <span id="comments">{LOGCOMMENT}</span>
+          &nbsp;&nbsp;&nbsp;
+          <span id="trackback">{LOGTRACKBACK}</span>
+        </p>
+        <p>投稿者&nbsp;：&nbsp;{LOGAUTHOR}</p>
+        <p>カテゴリ&nbsp;：&nbsp;{LOGCATEGORY}</p>
+        <!-- /article -->
+
+        <!-- share -->
+        <div id="share" data-role="collapsible" data-theme="b" data-content-theme="d" data-collapsed-icon="arrow-r" data-expanded-icon="arrow-d" data-inset="true">
+          <script type="text/javascript">
+          <!--
+            share();
+          //-->
+          </script>
+        </div>
+        <!-- /share -->
+
+        <!-- comments -->
+        {COMMENT}
+          <div id="comments"></div>
+          <h2>コメント</h2>
+          <div>
+            {COMMENTLOOP}
+              <ul data-role="listview" data-inset="true" data-theme="c">
+                <li data-role="list-divider">{COMMENTUSER}&nbsp;さん</li>
+                <li><p>{COMMENTBODY}</p></li>
+                <li><p>{COMMENTYMD}Y/m/d H:i{/COMMENTYMD}&nbsp;|&nbsp;{COMMENTEMAIL}E-Mail{/COMMENTEMAIL}&nbsp;|&nbsp;{COMMENTURL}URL{/COMMENTURL}&nbsp;|&nbsp;ID:{COMMENTID}</p></li>
+              </ul>
+            {/COMMENTLOOP}
+            <h2>コメント投稿</h2>
+            {COMMENTNOINPUT}
+              <p>この記事へのコメント受付は終了しています</p>
+            {/COMMENTNOINPUT}
+            {COMMENTINPUT}
+              <div data-role="fieldcontain">
+                <form action="?mode=comment" method="post" name="commentform" data-ajax="false" onSubmit="return comment_check()">
+                  <input type="hidden" value="comment" name="mode" />
+                  <input type="hidden" value="{TOKEN}" name="blogn_token" />
+                  <input type="hidden" value="{CEID}" name="blogn_cid" />
+                  <label for="c_name" class="ui-hidden-accessible">お名前 *</label>
+                  <input type="text" name="blogn_cname" value="{CNAME}" id="c_name" placeholder="お名前 *" />
+                  <p>
+                    <label for="c_email" class="ui-hidden-accessible">メールアドレス</label>
+                    <input type="email" name="blogn_cemail" value="{CEMAIL}" id="c_email" placeholder="メールアドレス" />
+                  </p>
+                  <p>
+                    <label for="c_url" class="ui-hidden-accessible">URL</label>
+                    <input type="url" name="blogn_curl" value="{CURL}" id="c_url" placeholder="URL" />
+                  </p>
+                  <p>
+                    <label for="c_mes" class="ui-hidden-accessible">コメント *</label>
+                    <textarea name="blogn_cmes" id="c_mes" placeholder="コメント *"></textarea>
+                  </p>
+                  <p class="containing-element">
+                    <label for="set_cookie" class="ui-hidden-accessible">Cookie登録</label>
+                    <select name="set_cookie" id="set_cookie" data-role="slider">
+                      <option value="off">Cookie Off</option>
+                      <option value="on">Cookie On</option>
+                    </select>
+                  </p>
+                  <input type="submit" value="コメント送信" />
+                </form>
+              </div>
+            {/COMMENTINPUT}
+          </div>
+        {/COMMENT}
+        <!-- /comments -->
+
+        <!-- trackback -->
+        {TRACKBACK}
+          <div id="trackback"></div>
+          <div>
+            <h2>トラックバック</h2>
+            {TRACKBACKNOINPUT}
+              <p>この記事へのトラックバック受付は終了しています</p>
+            {/TRACKBACKNOINPUT}
+            {TRACKBACKLOOP}
+              <ul data-role="listview" data-inset="true" data-theme="c">
+                <li data-role="list-divider">{TRACKBACKUSER}&nbsp;さん</li>
+                <li><p>{TRACKBACKBODY}</p></li>
+                <li><p>{TRACKBACKYMD}Y/m/d H:i{/TRACKBACKYMD}&nbsp;|&nbsp;{TRACKBACKTITLE}</p></li>
+              </ul>
+              <br />
+            {/TRACKBACKLOOP}
+            {TRACKBACKINPUT}
+              <label for="tburl">この記事のトラックバックURL</label>
+              <input type="url" value="{TRACKBACKURL}" name="tburl" id="tburl" readonly />
+            {/TRACKBACKINPUT}
+          </div>
+        {/TRACKBACK}
+        <!-- /trackback -->
+
+      {/LOGLOOP}
+    {/LOG}
+    <span id="article_not_exist"></span>
+    <script type="text/javascript">
+    <!--
+      article_not_exist('{SITENAME}','{SITETITLE}');
+    //-->
+    </script>
+    <!-- /log -->
+
+    <!-- profile -->
+    {PROFILES}
+      <div data-role="profile" data-theme="c">
+        <p>{PROFILENAME}</p>
+        <p>{PROFILEMES}</p>
+      </div>
+    {/PROFILES}
+    <!-- /profile -->
+
+    <!-- search -->
+    {SEARCH}
+      <div data-role="search" data-theme="c">
+        <ul data-role="listview" data-theme="c">
+          {SEARCHLOOP}
+            <li>{SEARCHLIST}</li>
+          {/SEARCHLOOP}
+        </ul>
+      </div>
+    {/SEARCH}
+    <!-- /search -->
+
+  </div>
+  <!-- /content -->
+
+  <!-- footer -->
+  <div data-role="footer" data-theme="b">
+
+    <!-- archives -->
+    {AR}
+      <div data-role="collapsible" data-theme="b" data-content-theme="d" data-collapsed-icon="arrow-r" data-expanded-icon="arrow-d" data-inset="true">
+        <h3>アーカイブ</h3>
+        <ul data-role="listview" data-theme="c">
+          {ARLOOP}
+            <li>{ARLINK}{ARYM}Y/m{/ARYM}({ARCOUNT}){/ARLINK}</li>
+          {/ARLOOP}
+        </ul>
+      </div>
+    {/AR}
+    <!-- /archives -->
+
+    <!-- categories -->
+    {CA}
+      <div data-role="collapsible" data-theme="b" data-content-theme="d" data-collapsed-icon="arrow-r" data-expanded-icon="arrow-d" data-inset="true">
+        <h3>カテゴリ</h3>
+        <ul data-role="listview" data-theme="c">
+          {CALOOP1}
+            <li>
+              {CALINK1}{CATITLE1}({CACOUNT1}件){/CALINK1}
+              {CALOOP2}
+                <li>{CALINK2}└{CATITLE2}({CACOUNT2}件){/CALINK2}</li>
+              {/CALOOP2}
+            </li>
+          {/CALOOP1}
+        </ul>
+      </div>
+    {/CA}
+    <!-- /categories -->
+
+    <!-- links -->
+    {LI}
+      <div data-role="collapsible" data-theme="b" data-content-theme="d" data-collapsed-icon="arrow-r" data-expanded-icon="arrow-d" data-inset="true">
+        <h3>リンク</h3>
+        <ul data-role="listview" data-theme="c">
+          {LILOOP1}
+            <li data-role="list-divider">{LICATEGORY}</li>
+            {LILOOP2}
+              <li>{LINAME}</li>
+            {/LILOOP2}
+          {/LILOOP1}
+        </ul>
+      </div>
+    {/LI}
+    <!-- /links -->
+
+    <!-- powered by -->
+    <div data-role="collapsible" data-theme="b" data-content-theme="d" data-collapsed-icon="arrow-r" data-expanded-icon="arrow-d" data-inset="true">
+      <h3>Powered By</h3>
+      <ul data-role="listview" data-theme="c">
+        <li data-role="list-divider">スクリプト</li>
+        <li><a href="http://www.blogn.org/" target="_blank">BlognPlus</a></li>
+        <li><a href="https://jquery.com/" target="_blank">jQuery</a></li>
+        <li><a href="https://jquerymobile.com/" target="_blank">jQuery mobile</a></li>
+        <li><a href="http://js-socials.com/" target="_blank">jsSocials</a></li>
+        <li><a href="http://fontawesome.io/" target="_blank">Font Awesome</a></li>
+        <li data-role="list-divider">スキン</li>
+        <li><a href="https://www.bloodia.net/" target="_blank">BLOODIA</a></li>
+      </ul>
+    </div>
+    <!-- /powered by -->
+
+    <!-- navbar -->
+    <div data-role="navbar" data-iconpos="top" role="navigation" class="navbar">
+      <ul>
+        <li class="navback">{BACKPAGE}前の記事{/BACKPAGE}</li>
+        <li class="navhome"><a href="{HOMELINK}" data-icon="home">ホーム</a></li>
+        <li class="navnext">{NEXTPAGE}次の記事{/NEXTPAGE}</li>
+      </ul>
+    </div>
+    <!-- /navbar -->
+
+    <h4>&copy; {SITENAME}</h4>
+  </div>
+  <!-- /footer -->
+
+</div>
+<!-- /page -->
+
+</body>
+</html>
