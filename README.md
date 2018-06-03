@@ -4,7 +4,7 @@ BlognPlus専用のスマートフォンOS向けブラウザに最適化された
 著作権表示部の削除、および二次配布以外は、特に制限等は設けません。ご自由にご使用ください。
 
 ## サンプル
-<img src="https://www.bloodia.net/files/download/blognplus-skin-mobile.jpg" width="394" height="700">
+<img src="https://www.bloodia.net/files/github/blognplus-skin-mobile.jpg" width="394" height="700">
 
 ## 動作環境
 BlognPlus（ぶろぐん＋） 2.6.11および以下の環境上のネイティヴブラウザで正常表示を確認しています。
