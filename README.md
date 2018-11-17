@@ -1,4 +1,7 @@
 # BlognPlus-Skin-mobile
+[![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://github.com/bloodia/BlognPlus-Skin-mobile/blob/master/LICENSE)
+
+## 概要
 [BlognPlus（ぶろぐん＋）](http://www.blogn.org "BlognPlus（ぶろぐん＋）")用のスキン（スマートフォンOS向け）です。  
 BlognPlus専用のスマートフォンOS向けブラウザに最適化されたスキンです。  
 著作権表示部の削除、および二次配布以外は、特に制限等は設けません。ご自由にご使用ください。
