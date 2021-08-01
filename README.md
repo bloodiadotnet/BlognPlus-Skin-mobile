@@ -1,5 +1,5 @@
 # BlognPlus-Skin-mobile
-[![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://github.com/bloodia/BlognPlus-Skin-mobile/blob/master/LICENSE)
+[![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://github.com/bloodiadotnet/BlognPlus-Skin-mobile/blob/master/LICENSE)
 
 ## 概要
 [BlognPlus（ぶろぐん＋）](http://www.blogn.org "BlognPlus（ぶろぐん＋）")用のスキン（スマートフォンOS向け）です。  
@@ -42,4 +42,4 @@ BlognPlus（ぶろぐん＋） 2.6.11および以下の環境上のネイティ�
 4. このスキンは、jQueryプロジェクトチーム提供の「[jQuery](https://jquery.com/ "jQuery")」および「[jQuery mobile](https://jquerymobile.com/ "jQuery mobile")」、Artem Tabalin様提供の「[jsSocials](http://js-socials.com/ "jsSocials")」、Dave Gandy様提供の「[Font Awesome](http://fontawesome.io/ "Font Awesome")」を利用しています。「[jquery-1.8.3](https://code.jquery.com/jquery-1.8.3.min.js "jquery-1.8.3")」、「[jquery.mobile-1.3.2](https://jquerymobile.com/resources/download/jquery.mobile-1.3.2.zip "jquery.mobile-1.3.2")」、「[jssocials-1.4.0](https://github.com/tabalinas/jssocials/releases/download/v1.4.0/jssocials-1.4.0.zip "jssocials-1.4.0")」、「[font-awesome-4.7.0](http://fontawesome.io/assets/font-awesome-4.7.0.zip "font-awesome-4.7.0")」の各スクリプトについては、動作確認のために当サーバ内に保存してある資源にダイレクトリンクさせていますが、実際に運用されていく場合は、各配布先からローカル環境にダウンロード後、パスを変更してお使いください。基本的にダイレクトリンクはNGです。
 
 ## 製作者
-[@bloodia](https://twitter.com/bloodiadotnet)
+[@bloodiadotnet](https://twitter.com/bloodiadotnet)
